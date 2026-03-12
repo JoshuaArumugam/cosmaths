@@ -22,6 +22,21 @@
     ");
     $stmt->execute();
 
+    // adding test data to tblusers
+    $stmt = $conn->prepare("
+    INSERT INTO tblusers
+    (UserID, Username, Email, Password)
+    VALUES
+    (NULL, 'Alexsmells', 'alexchan@gmail.com', :Password)
+    ");
+
+    // hashing password
+    $hashedpassword = password_hash("AlexChan58", PASSWORD_DEFAULT);
+
+    // bind hashed password to insert statement
+    $stmt->bindParam(":Password", $hashedpassword);
+    $stmt->execute();
+
     echo("tblusers made<br>");
 
     // creating tblinterests, resets it if it already exists
