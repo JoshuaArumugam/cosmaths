@@ -15,7 +15,7 @@
     // creating tblusers, resets it if it already exists
     $stmt = $conn->prepare("DROP TABLE IF EXISTS tblusers;
     CREATE TABLE tblusers
-    (UserID INT(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    (UserID INT(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     Username VARCHAR(20) NOT NULL,
     Email VARCHAR(254) NOT NULL,
     Password VARCHAR(256) NOT NULL);
@@ -49,13 +49,63 @@
     ");
     $stmt->execute();
 
+    // adding test data to tblinterests
+    $stmt = $conn->prepare("
+    INSERT INTO tblinterests
+    (UserID, InterestNumber, TopicID)
+    VALUES
+    (1, 0, 1)
+    ");
+    $stmt->execute();
+
+    $stmt = $conn->prepare("
+    INSERT INTO tblinterests
+    (UserID, InterestNumber, TopicID)
+    VALUES
+    (1, 1, 2)
+    ");
+    $stmt->execute();
+
+    $stmt = $conn->prepare("
+    INSERT INTO tblinterests
+    (UserID, InterestNumber, TopicID)
+    VALUES
+    (1, 2, 3)
+    ");
+    $stmt->execute();
+
     echo("tblinterests made<br>");
 
     // creating tbltopiclabels, resets it if it already exists
     $stmt = $conn->prepare("DROP TABLE IF EXISTS tbltopiclabels;
     CREATE TABLE tbltopiclabels
-    (TopicID TINYINT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    (TopicID TINYINT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     TopicName VARCHAR(60) NOT NULL);
+    ");
+    $stmt->execute();
+
+    // adding test data to tbltopiclabels
+    $stmt = $conn->prepare("
+    INSERT INTO tbltopiclabels
+    (TopicID, TopicName)
+    VALUES
+    (NULL, QUOTE('Algebra'))
+    ");
+    $stmt->execute();
+
+    $stmt = $conn->prepare("
+    INSERT INTO tbltopiclabels
+    (TopicID, TopicName)
+    VALUES
+    (NULL, QUOTE('Geometry'))
+    ");
+    $stmt->execute();
+
+    $stmt = $conn->prepare("
+    INSERT INTO tbltopiclabels
+    (TopicID, TopicName)
+    VALUES
+    (NULL, QUOTE('Calculus'))
     ");
     $stmt->execute();
 
@@ -64,7 +114,7 @@
     // creating tblposts, resets it if it already exists
     $stmt = $conn->prepare("DROP TABLE IF EXISTS tblposts;
     CREATE TABLE tblposts
-    (PostID INT(4) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    (PostID INT(4) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     UserID INT(4) UNSIGNED NOT NULL,
     PostContent VARCHAR(1000) NOT NULL,
     PostTitle VARCHAR(300) NOT NULL,
@@ -74,6 +124,23 @@
     IsQuestion TINYINT(1) UNSIGNED NOT NULL,
     QuestionAnswer DECIMAL(8, 2),
     QuestionHint VARCHAR(300));
+    ");
+    $stmt->execute();
+
+    // adding test data to tblposts
+    $stmt = $conn->prepare("
+    INSERT INTO tblposts
+    (PostID, UserID, PostContent, PostTitle, PostTime, PostLikes, PostDislikes, IsQuestion, QuestionAnswer, QuestionHint)
+    VALUES
+    (NULL, 1, QUOTE('This post is about how much I love maths it is the best subject in the world I love it so much'), QUOTE('How much I love maths'), CURRENT_TIMESTAMP(), 5, 2, 0, NULL, NULL)
+    ");
+    $stmt->execute();
+
+    $stmt = $conn->prepare("
+    INSERT INTO tblposts
+    (PostID, UserID, PostContent, PostTitle, PostTime, PostLikes, PostDislikes, IsQuestion, QuestionAnswer, QuestionHint)
+    VALUES
+    (NULL, 1, QUOTE('Solve this very hard equation: \(x+5=7\)'), QUOTE('Very hard equation'), CURRENT_TIMESTAMP(), 5, 2, 1, 2, 'Subtract 5 from both sides')
     ");
     $stmt->execute();
 
@@ -89,18 +156,52 @@
     ");
     $stmt->execute();
 
+    // adding test data to tblpoststags
+    $stmt = $conn->prepare("
+    INSERT INTO tblpoststags
+    (PostID, TopicNumber, TopicID)
+    VALUES
+    (1, 0, 1)
+    ");
+    $stmt->execute();
+
+    $stmt = $conn->prepare("
+    INSERT INTO tblpoststags
+    (PostID, TopicNumber, TopicID)
+    VALUES
+    (2, 0, 2)
+    ");
+    $stmt->execute();
+
     echo("tblpoststags made<br>");
 
     // creating tblcomments, resets it if it already exists
     $stmt = $conn->prepare("DROP TABLE IF EXISTS tblcomments;
     CREATE TABLE tblcomments
-    (CommentID INT(6) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    (CommentID INT(6) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     UserID INT(4) UNSIGNED NOT NULL,
     PostID INT(4) UNSIGNED NOT NULL,
     CommentContent VARCHAR(1000) NOT NULL,
     CommentTime DATETIME NOT NULL,
     CommentLikes INT(4) UNSIGNED NOT NULL,
     CommentDislikes INT(4) UNSIGNED NOT NULL);
+    ");
+    $stmt->execute();
+
+    // adding test data to tblcomments
+    $stmt = $conn->prepare("
+    INSERT INTO tblcomments
+    (CommentID, UserID, PostID, CommentContent, CommentTime, CommentLikes, CommentDislikes)
+    VALUES
+    (NULL, 1, 1, QUOTE('This is the best post Ive ever seen in my life'), CURRENT_TIMESTAMP(), 100, 3)
+    ");
+    $stmt->execute();
+
+    $stmt = $conn->prepare("
+    INSERT INTO tblcomments
+    (CommentID, UserID, PostID, CommentContent, CommentTime, CommentLikes, CommentDislikes)
+    VALUES
+    (NULL, 1, 2, QUOTE('Omg this question is really hard >:('), CURRENT_TIMESTAMP(), 2, 1000)
     ");
     $stmt->execute();
 
