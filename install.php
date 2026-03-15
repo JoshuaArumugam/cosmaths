@@ -89,7 +89,7 @@
     INSERT INTO tbltopiclabels
     (TopicID, TopicName)
     VALUES
-    (NULL, QUOTE('Algebra'))
+    (NULL, 'Algebra')
     ");
     $stmt->execute();
 
@@ -97,7 +97,7 @@
     INSERT INTO tbltopiclabels
     (TopicID, TopicName)
     VALUES
-    (NULL, QUOTE('Geometry'))
+    (NULL, 'Geometry')
     ");
     $stmt->execute();
 
@@ -105,7 +105,7 @@
     INSERT INTO tbltopiclabels
     (TopicID, TopicName)
     VALUES
-    (NULL, QUOTE('Calculus'))
+    (NULL, 'Calculus')
     ");
     $stmt->execute();
 
@@ -132,7 +132,7 @@
     INSERT INTO tblposts
     (PostID, UserID, PostContent, PostTitle, PostTime, PostLikes, PostDislikes, IsQuestion, QuestionAnswer, QuestionHint)
     VALUES
-    (NULL, 1, QUOTE('This post is about how much I love maths it is the best subject in the world I love it so much'), QUOTE('How much I love maths'), CURRENT_TIMESTAMP(), 5, 2, 0, NULL, NULL)
+    (NULL, 1, 'This post is about how much I love maths it is the best subject in the world I love it so much', 'How much I love maths', CURRENT_TIMESTAMP(), 5, 2, 0, NULL, NULL)
     ");
     $stmt->execute();
 
@@ -140,7 +140,7 @@
     INSERT INTO tblposts
     (PostID, UserID, PostContent, PostTitle, PostTime, PostLikes, PostDislikes, IsQuestion, QuestionAnswer, QuestionHint)
     VALUES
-    (NULL, 1, QUOTE('Solve this very hard equation: \(x+5=7\)'), QUOTE('Very hard equation'), CURRENT_TIMESTAMP(), 5, 2, 1, 2, 'Subtract 5 from both sides')
+    (NULL, 1, 'Solve this very hard equation: \(x+5=7\)', 'Very hard equation', CURRENT_TIMESTAMP(), 5, 2, 1, 2, 'Subtract 5 from both sides')
     ");
     $stmt->execute();
 
@@ -193,7 +193,7 @@
     INSERT INTO tblcomments
     (CommentID, UserID, PostID, CommentContent, CommentTime, CommentLikes, CommentDislikes)
     VALUES
-    (NULL, 1, 1, QUOTE('This is the best post Ive ever seen in my life'), CURRENT_TIMESTAMP(), 100, 3)
+    (NULL, 1, 1, 'This is the best post I\'ve ever seen in my life', CURRENT_TIMESTAMP(), 100, 3)
     ");
     $stmt->execute();
 
@@ -201,7 +201,7 @@
     INSERT INTO tblcomments
     (CommentID, UserID, PostID, CommentContent, CommentTime, CommentLikes, CommentDislikes)
     VALUES
-    (NULL, 1, 2, QUOTE('Omg this question is really hard >:('), CURRENT_TIMESTAMP(), 2, 1000)
+    (NULL, 1, 2, 'Omg this question is really hard >:(', CURRENT_TIMESTAMP(), 2, 1000)
     ");
     $stmt->execute();
 
