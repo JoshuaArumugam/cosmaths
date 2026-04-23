@@ -21,6 +21,17 @@
     </head>
     <body>
         <h1>Sign-up</h1>
+        <?php
+            // start session to use session variables
+            session_start();
+
+            // check sign up status to check whether there was a previous attempt
+            if (isset($_SESSION["signupstatus"])) {
+                if ($_SESSION["signupstatus"]) {
+                    
+                }
+            }
+        ?>
         <form action="processsignup.php" method="post" autocomplete="off">
             <label for="username">Username:</label><br>
             <input type="text" id="username" name="username"><br>
