@@ -30,7 +30,37 @@
             $_SESSION["signupstatus"] = false;
             break;
     }
+    // select all rows where username matches inputted username
+    $stmt = $conn->prepare("
+    SELECT * FROM tblusers WHERE Username=:Username
+    ");
+    $stmt->bindParam(":Username", $_POST["username"]);
+    $stmt->execute();
 
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // if row is not null then that means someone already has that username
+    if ($row) {
+        // set signupstatus to false and error msg
+        $_SESSION["signuperrormsg"] = "Username is already taken";
+        $_SESSION["signupstatus"] = false;
+    }
+
+    // repeat but for email address instead
+    $stmt = $conn->prepare("
+    SELECT * FROM tblusers WHERE Email=:Email
+    ");
+    $stmt->bindParam(":Email", $_POST["email"]);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // if row is not null then that means someone already has that email
+    if ($row) {
+        // set signupstatus to false and error msg
+        $_SESSION["signuperrormsg"] = "User already exists with same email address";
+        $_SESSION["signupstatus"] = false;
+    }
     if ($_SESSION["signupstatus"]) {
         // insert statement
         $stmt = $conn->prepare("

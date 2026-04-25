@@ -28,7 +28,12 @@
             // check sign up status to check whether there was a previous attempt
             if (isset($_SESSION["signupstatus"])) {
                 if ($_SESSION["signupstatus"]) {
-                    
+                    // success message
+                    echo("<p>Sign-up successful");
+                }
+                else {
+                    // display error message
+                    echo("<p>Sign-up error: " . $_SESSION["signuperrormsg"] . "</p>");
                 }
             }
         ?>
