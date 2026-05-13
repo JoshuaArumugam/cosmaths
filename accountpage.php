@@ -51,6 +51,36 @@
             </select>
             <input type="submit" value="Add interest">
         </form>
+        <ol>
+            <?php
+                // fetch all user interests
+                $stmt = $conn->prepare("
+                SELECT * FROM tblinterests WHERE UserID=:UserID;
+                ");
+
+                // bind params and execute stmt
+                $stmt->bindParam(":UserID", $_SESSION["loggedinid"]);
+                $stmt->execute();
+
+                // loop through returned records and add each interest along with the option to remove it
+
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    // fetch name of topic using topic id
+                    $stmt2 = $conn->prepare("
+                    SELECT TopicName FROM tbltopiclabels WHERE TopicID=:TopicID;
+                    ");
+
+                    // bind params and execute stmt
+                    $stmt2->bindParam(":TopicID", $row["TopicID"]);
+                    $stmt2->execute();
+
+                    // get returned topic name
+                    $row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+                    // create li element, and form so that interest can be removed
+                    echo("<li><form action='removeinterest.php' method='post'><input name='topicid' type='hidden' value='" . $row["TopicID"] . "'><label for='submitremove'>". $row2["TopicName"] . " </label><input type='submit' value='Remove' id='submitremove'></form></li>");
+                }
+            ?>
+        </ol>
         <h3>Posts</h3>
     </body>
 </html>
