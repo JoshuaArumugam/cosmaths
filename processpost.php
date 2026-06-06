@@ -14,6 +14,27 @@
 
     // switch statement to go through all cases of invalid information
     switch(true) {
+        // checking if inputs left empty
+        case !$_POST["title"]:
+            $_SESSION["createposterrormsg"] = "Post must have a title";
+            $_SESSION["createpoststatus"] = false;
+            break;
+        case !$_POST["content"]:
+            $_SESSION["createposterrormsg"] = "Post must have content";
+            $_SESSION["createpoststatus"] = false;
+            break;
+        case !$_POST["questionanswer"] && $_POST["isquestion"] == 1:
+            $_SESSION["createposterrormsg"] = "Question must have an answer";
+            $_SESSION["createpoststatus"] = false;
+            break;
+        case !$_POST["questionhint"] && $_POST["isquestion"] == 1:
+            $_SESSION["createposterrormsg"] = "Question must have a hint";
+            $_SESSION["createpoststatus"] = false;
+            break;
+        case !$_POST["posttopics"]:
+            $_SESSION["createposterrormsg"] = "Post must have topic(s)";
+            $_SESSION["createpoststatus"] = false;
+            break;
         // content too long
         case strlen($_POST["content"]) > 1000:
             // set error message, create post status and break
@@ -49,5 +70,41 @@
     }
 
     // print out error message and status to check if code works
-    print_r($_SESSION["createposterrormsg"]);
+    //print_r($_SESSION["createposterrormsg"]);
+    // if no errors, then can add to tblposts
+    if ($_SESSION["createpoststatus"]) {
+        // insert to tblposts
+        $stmt = $conn->prepare("
+        INSERT INTO tblposts
+        (PostID, UserID, PostContent, PostTitle, PostTime, PostLikes, PostDislikes, IsQuestion, QuestionAnswer, QuestionHint)
+        VALUES
+        (NULL, :UserID, :PostContent, :PostTitle, CURRENT_TIMESTAMP(), 0, 0, :IsQuestion, :QuestionAnswer, :QuestionHint)
+        ");
+        // bind params and execute
+        $stmt->bindParam(":UserID", $_SESSION["loggedinid"]);
+        $stmt->bindParam(":PostContent", $_POST["content"]);
+        $stmt->bindParam(":PostTitle", $_POST["title"]);
+        $stmt->bindParam(":IsQuestion", $_POST["isquestion"]);
+        // if post is a question then set answer and hint, else they are null
+        if ($_POST["isquestion"] == 1) {
+            $stmt->bindParam(":QuestionAnswer", $_POST["questionanswer"]);
+            $stmt->bindParam(":QuestionHint", $_POST["questionhint"]);
+        }
+        else {
+            // set to null
+            $null = NULL;
+            $stmt->bindParam(":QuestionAnswer", $null);
+            $stmt->bindParam(":QuestionHint", $null);
+        }
+        $stmt->execute();
+
+        // then insert each topic to tblpoststags
+        $stmt = $conn->prepare("
+        INSERT INTO tblpoststags
+        (PostID, TopicNumber, TopicID)
+        VALUES
+        ((SELECT PostID FROM tblposts WHERE PostID = (SELECT MAX(PostID) FROM tblposts WHERE UserID = :UserID)), :TopicNumber, :TopicID)
+        ");
+        $stmt->execute();
+    }
 ?>
