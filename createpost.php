@@ -25,7 +25,6 @@
             }
             // runs when user types in each box
             function renderTitle() {
-                console.log("user typed");
                 // select title preview box and text user typed in
                 let titlepreview = document.getElementById("titlepreview");
                 let text = document.getElementById("title").value;
@@ -36,22 +35,26 @@
                 MathJax.typeset();
             }
             // repeat for other input boxes, same as rendertitle
-            function renderTitle() {
-                console.log("user typed");
-                // select title preview box and text user typed in
-                let titlepreview = document.getElementById("titlepreview");
-                let text = document.getElementById("title").value;
+            function renderContent() {
+                let contentpreview = document.getElementById("contentpreview");
+                let text = document.getElementById("content").value;
                 
-                // add text to preview box, it needs \(\) around it
-                titlepreview.innerHTML = "\\(" + text + "\\)";
-                // call mathjax function to render text
+                contentpreview.innerHTML = "\\(" + text + "\\)";
+                MathJax.typeset();
+            }
+            // render question hint
+            function renderHint() {
+                let hintpreview = document.getElementById("questionhintpreview");
+                let text = document.getElementById("questionhint").value;
+                
+                hintpreview.innerHTML = "\\(" + text + "\\)";
                 MathJax.typeset();
             }
         </script>
     </head>
     <body>
         <h1>Create post</h1>
-        <form method="post" action="processcreatepost.php">
+        <form method="post" action="processpost.php">
             <!-- title input box + preview for it -->
             <label for="title"><b>Title:</b></label><br>
             <!-- when user types, runs function to display text in preview box -->
@@ -63,6 +66,25 @@
             <input type="text" id="content" name="content" oninput="renderContent()"><br>
             <p>Preview:</p>
             <p id="contentpreview"></p>
+            <label for="posttopics"><b>Select topics for post:</b></label><br>
+            <select name="posttopics" id="posttopics" multiple>
+                <?php
+                    // connect to db and fetch all topics from table
+                    include_once('connection.php');
+
+                    $stmt = $conn->prepare("
+                    SELECT * FROM tbltopiclabels;
+                    ");
+                    $stmt->execute();
+
+                    // loop through returned records and add all options to the dropdown list
+
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        // create select option
+                        echo("<option value='" . $row["TopicID"] . "'>" . $row["TopicName"] . "</option>");
+                    }
+                ?>
+            </select><br><br>
             <label for="isquestion"><b>Is the post a question? </b></label>
             <!-- when checkbox clicked, runs function to hide/show relevant elements -->
             <input type="checkbox" id="isquestion" onclick="showQuestionInputs()" name="isquestion" value="1"><br><br>
