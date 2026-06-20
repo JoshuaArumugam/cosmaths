@@ -67,7 +67,7 @@
             <p>Preview:</p>
             <p id="contentpreview"></p>
             <label for="posttopics"><b>Select topics for post:</b></label><br>
-            <select name="posttopics" id="posttopics" multiple>
+            <select name="posttopics[]" id="posttopics" multiple="multiple">
                 <?php
                     // connect to db and fetch all topics from table
                     include_once('connection.php');

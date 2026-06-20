@@ -1,6 +1,8 @@
 <?php
     // remove htmlspecialchars from input data to prevent injection
     array_map("htmlspecialchars", $_POST);
+    
+    print_r($_POST);
     // connect to db
     include_once("connection.php");
     // start session so session variables can be used
@@ -68,11 +70,10 @@
                 }
             }
     }
-
+    print_r($_POST["posttopics"]);
     // print out error message and status to check if code works
-    //print_r($_SESSION["createposterrormsg"]);
     // if no errors, then can add to tblposts
-    if ($_SESSION["createpoststatus"]) {
+    /*if ($_SESSION["createpoststatus"]) {
         // insert to tblposts
         $stmt = $conn->prepare("
         INSERT INTO tblposts
@@ -103,8 +104,9 @@
         INSERT INTO tblpoststags
         (PostID, TopicNumber, TopicID)
         VALUES
-        ((SELECT PostID FROM tblposts WHERE PostID = (SELECT MAX(PostID) FROM tblposts WHERE UserID = :UserID)), :TopicNumber, :TopicID)
+        (SELECT MAX(PostID) FROM tblposts WHERE UserID = :UserID), :TopicNumber, :TopicID)
         ");
+        $stmt->bindParam(":UserID", $_SESSION["loggedinid"]);
         $stmt->execute();
-    }
+    }*/
 ?>
