@@ -1,14 +1,13 @@
 <?php
     // remove htmlspecialchars from input data to prevent injection
-    array_map("htmlspecialchars", $_POST);
+    //array_map("htmlspecialchars", $_POST);
     
-    print_r($_POST);
     // connect to db
     include_once("connection.php");
     // start session so session variables can be used
     session_start();
     // redirect back to createpost.php
-    //header("Location: createpost.php");
+    header("Location: createpost.php");
 
     // default create post status to true
     $_SESSION["createpoststatus"] = true;
@@ -70,10 +69,8 @@
                 }
             }
     }
-    print_r($_POST["posttopics"]);
-    // print out error message and status to check if code works
     // if no errors, then can add to tblposts
-    /*if ($_SESSION["createpoststatus"]) {
+    if ($_SESSION["createpoststatus"]) {
         // insert to tblposts
         $stmt = $conn->prepare("
         INSERT INTO tblposts
@@ -85,28 +82,37 @@
         $stmt->bindParam(":UserID", $_SESSION["loggedinid"]);
         $stmt->bindParam(":PostContent", $_POST["content"]);
         $stmt->bindParam(":PostTitle", $_POST["title"]);
-        $stmt->bindParam(":IsQuestion", $_POST["isquestion"]);
         // if post is a question then set answer and hint, else they are null
         if ($_POST["isquestion"] == 1) {
+            $stmt->bindParam(":IsQuestion", $_POST["isquestion"]);
             $stmt->bindParam(":QuestionAnswer", $_POST["questionanswer"]);
             $stmt->bindParam(":QuestionHint", $_POST["questionhint"]);
         }
         else {
-            // set to null
+            // set to null, isquestion set to 0
+            $isquestion = 0;
+            $stmt->bindParam(":IsQuestion", $isquestion);
             $null = NULL;
             $stmt->bindParam(":QuestionAnswer", $null);
             $stmt->bindParam(":QuestionHint", $null);
         }
         $stmt->execute();
-
-        // then insert each topic to tblpoststags
-        $stmt = $conn->prepare("
-        INSERT INTO tblpoststags
-        (PostID, TopicNumber, TopicID)
-        VALUES
-        (SELECT MAX(PostID) FROM tblposts WHERE UserID = :UserID), :TopicNumber, :TopicID)
-        ");
-        $stmt->bindParam(":UserID", $_SESSION["loggedinid"]);
-        $stmt->execute();
-    }*/
+        // loop through each topic in posttopics and insert to tblpoststags
+        $topicnumber = 0;
+        foreach ($_POST["posttopics"] as $key => $topic) {
+            // then insert each topic to tblpoststags, selects max postid, which is the post just created
+            $stmt = $conn->prepare("
+            INSERT INTO tblpoststags
+            (PostID, TopicNumber, TopicID)
+            VALUES
+            ((SELECT MAX(PostID) FROM tblposts WHERE UserID = :UserID), :TopicNumber, :TopicID);
+            ");
+            $stmt->bindParam(":UserID", $_SESSION["loggedinid"]);
+            $stmt->bindParam(":TopicNumber", $topicnumber);
+            $stmt->bindParam(":TopicID", $topic);
+            $stmt->execute();
+            // increment topicnumber by 1 for next tag (if applicable)
+            $topicnumber++;
+        }
+    }
 ?>

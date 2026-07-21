@@ -15,6 +15,7 @@
 <html>
     <head>
         <title>CosMaths Account</title>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     </head>
     <body>
         <h1>Account Information</h1>
@@ -82,5 +83,26 @@
             ?>
         </ol>
         <h3>Posts</h3>
+        <?php
+            // fetch all posts using userid
+            $stmt = $conn->prepare("
+            SELECT * FROM tblposts WHERE UserID=:UserID;
+            ");
+
+            // bind params and execute
+            $stmt->bindParam(":UserID", $_SESSION["loggedinid"]);
+            $stmt->execute();
+
+            // loop through records and echo post title, content, likes, dislikes, and date
+            // add \\(\\) around latex so it gets rendered by mathjax
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                echo("<h4>\\(" . $row["PostTitle"] . "\\)</h4>");
+                echo("<p>\\(" . $row["PostContent"] . "\\)</p>");
+                echo("<p><b>Likes:</b> " . $row["PostLikes"] . "</p>");
+                echo("<p><b>Dislikes:</b> " . $row["PostDislikes"] . "</p>");
+                echo("<p><b>Date:</b> " . $row["PostTime"] . "</p>");
+                echo("<br>");
+            }
+        ?>
     </body>
 </html>

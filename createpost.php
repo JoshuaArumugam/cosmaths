@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -97,5 +100,18 @@
             <p hidden id="questionhintpreview" class="question"></p><br hidden class="question">
             <input type="submit" value="Post">
         </form>
+        <?php
+            // check create post status to check whether there was a previous attempt
+            if (isset($_SESSION["createpoststatus"])) {
+                if ($_SESSION["createpoststatus"]) {
+                    // success message
+                    echo("<p>Post created successfully</p>");
+                }
+                else {
+                    // display error message
+                    echo("<p>Post creation error: " . $_SESSION["createposterrormsg"] . "</p>");
+                }
+            }
+        ?>
     </body>
 </html>
