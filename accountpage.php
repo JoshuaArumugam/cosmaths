@@ -95,13 +95,17 @@
 
             // loop through records and echo post title, content, likes, dislikes, and date
             // add \\(\\) around latex so it gets rendered by mathjax
+            // everything is put inside a form element so postid can be posted to savepostid.php when user clicks anywhere on the post
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                echo("<form action='savepostid.php' method='post' onclick='this.submit()' style='cursor: pointer;'>");
+                echo("<input type='hidden' name='PostID' value='" . $row["PostID"] . "'>");
                 echo("<h4>\\(" . $row["PostTitle"] . "\\)</h4>");
                 echo("<p>\\(" . $row["PostContent"] . "\\)</p>");
                 echo("<p><b>Likes:</b> " . $row["PostLikes"] . "</p>");
                 echo("<p><b>Dislikes:</b> " . $row["PostDislikes"] . "</p>");
                 echo("<p><b>Date:</b> " . $row["PostTime"] . "</p>");
                 echo("<br>");
+                echo("</form>");
             }
         ?>
     </body>
