@@ -206,4 +206,6 @@
     $stmt->execute();
 
     echo("tblcomments made<br>");
+
+    // delete all cookies
 ?>
