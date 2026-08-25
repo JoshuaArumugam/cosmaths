@@ -208,4 +208,9 @@
     echo("tblcomments made<br>");
 
     // delete all cookies
+    foreach ($_COOKIE as $name => $value) {
+        setcookie($name, '', time() - 3600, '/');
+        unset($_COOKIE[$name]);
+    }
+    echo("cookies deleted<br>")
 ?>

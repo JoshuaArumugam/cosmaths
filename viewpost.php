@@ -44,10 +44,6 @@
         </script>
     </head>
     <body>
-        <?php
-            // print out cookies to test
-            print_r($_COOKIE);
-        ?>
         <h1>View Post</h1>
         <?php
             // fetch post data and display it, if post is a question then also display question, answer box, and show hint button
@@ -108,10 +104,16 @@
                 $stmt2->bindParam(":UserID", $row["UserID"]);
                 $stmt2->execute();
                 $user = $stmt2->fetch(PDO::FETCH_ASSOC);
-                echo("<p><b>" . $user["Username"] . ":</b> " . $row["CommentContent"] . "</p>");
+                echo("<p><b>" . $user["Username"] . ":</b> \\(" . $row["CommentContent"] . "\\)</p>");
                 echo("<p>Likes: " . $row["CommentLikes"] . "</p>");
                 echo("<p>Dislikes: " . $row["CommentDislikes"] . "</p>");
                 echo("<p>Date: " . $row["CommentTime"] . "</p>");
+                // add form for like and dislike butttons
+                echo("<form action='processcommentreaction.php' method='post'>");
+                echo("<input type='hidden' name='commentid' value='" . $row["CommentID"] . "'>");
+                echo("<button type='submit' name='reaction' value='like'>Like</button>");
+                echo("<button type='submit' name='reaction' value='dislike'>Dislike</button>");
+                echo("</form>");
                 echo("<br>");
             }
         ?>

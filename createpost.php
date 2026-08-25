@@ -113,5 +113,36 @@
                 }
             }
         ?>
+        <!-- on-screen keyboard for latex -->
+        <div id="keyboard" style="width: 35%;">
+            <h3>Keyboard</h3>
+            <div id="buttonsgrid" style="display: grid; grid-template-columns: repeat(6, 1fr);">
+                <button>\(\frac{a}{b}\)</button>
+                <button>\(\sqrt{x}\)</button>
+                <button>\(\sum_{i=1}^{n}\)</button>
+                <button>\(\int_{a}^{b}dx\)</button>
+                <button>\(\lim_{x \to c}\)</button>
+                <button>\(\infty\)</button>
+                <button>\(\pi\)</button>
+                <button>\(\sin(\theta)\)</button>
+                <button>\(\cos(\theta)\)</button>
+                <button>\(\tan(\theta)\)</button>
+                <button>\(a^{b}\)</button>
+                <button>\(\sqrt[n]{x}\)</button>
+            </div>
+        </div>
+        <script>
+            // when text box clicked, save the text box in lastusedtextbox variable
+            let lastusedtextbox = null;
+
+            // select all text boxes
+            let textboxes = document.querySelectorAll("input[type='text'], textarea");
+            // save when clicked
+            textboxes.forEach(function(textbox) {
+                textbox.addEventListener("focus", function() {
+                    lastusedtextbox = this;
+                });
+            });
+        </script>
     </body>
 </html>
