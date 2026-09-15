@@ -117,18 +117,18 @@
         <div id="keyboard" style="width: 35%;">
             <h3>Keyboard</h3>
             <div id="buttonsgrid" style="display: grid; grid-template-columns: repeat(6, 1fr);">
-                <button>\(\frac{a}{b}\)</button>
-                <button>\(\sqrt{x}\)</button>
-                <button>\(\sum_{i=1}^{n}\)</button>
-                <button>\(\int_{a}^{b}dx\)</button>
-                <button>\(\lim_{x \to c}\)</button>
-                <button>\(\infty\)</button>
-                <button>\(\pi\)</button>
-                <button>\(\sin(\theta)\)</button>
-                <button>\(\cos(\theta)\)</button>
-                <button>\(\tan(\theta)\)</button>
-                <button>\(a^{b}\)</button>
-                <button>\(\sqrt[n]{x}\)</button>
+                <button onclick="addToTextBox('\\frac{}{}')">\(\frac{a}{b}\)</button>
+                <button onclick="addToTextBox('\\sqrt{}')">\(\sqrt{x}\)</button>
+                <button onclick="addToTextBox('\\sum_{}^{}')">\(\sum_{i=1}^{n}\)</button>
+                <button onclick="addToTextBox('\\int_{}^{}dx')">\(\int_{a}^{b}dx\)</button>
+                <button onclick="addToTextBox('\\lim_{x \\to }')">\(\lim_{x \to c}\)</button>
+                <button onclick="addToTextBox('\\infty')">\(\infty\)</button>
+                <button onclick="addToTextBox('\\pi')">\(\pi\)</button>
+                <button onclick="addToTextBox('\\sin(\\theta)')">\(\sin(\theta)\)</button>
+                <button onclick="addToTextBox('\\cos(\\theta)')">\(\cos(\theta)\)</button>
+                <button onclick="addToTextBox('\\tan(\\theta)')">\(\tan(\theta)\)</button>
+                <button onclick="addToTextBox('{}^{}')">\(a^{b}\)</button>
+                <button onclick="addToTextBox('\\sqrt[n]{x}')">\(\sqrt[n]{x}\)</button>
             </div>
         </div>
         <script>
@@ -143,6 +143,18 @@
                     lastusedtextbox = this;
                 });
             });
+            
+            // function to add latex to lastusedtextbox when button clicked
+            function addToTextBox(latex) {
+                // check if lastusedtextbox null
+                if (lastusedtextbox != null) {
+                    lastusedtextbox.value = lastusedtextbox.value + latex;
+                }
+                // render all text boxes
+                renderTitle()
+                renderContent()
+                renderHint()
+            }
         </script>
     </body>
 </html>
