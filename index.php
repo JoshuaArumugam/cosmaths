@@ -1,6 +1,9 @@
 <?php
     // connect to db
     include_once('connection.php');
+
+    // start session
+    session_start();
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,48 +42,86 @@
                 }
             ?>
             <p><b>Post type:</b></p>
-            <input type="checkbox" name="helprequest" value="1" id="helprequest">
-            <label for="helprequest">Help Request</label><br>
+            <input type="checkbox" name="helprequestlesson" value="1" id="helprequestlesson">
+            <label for="helprequestlesson">Help Request/Lesson</label><br>
             <input type="checkbox" name="question" value="1" id="question">
             <label for="question">Question</label><br>
-            <input type="checkbox" name="lesson" value="1" id="lesson">
-            <label for="lesson">Lesson</label><br><br>
             <input type="submit" value="Submit">
         </form>
         <?php
-            // fetch all posts and sort by most likes
-            $stmt = $conn->prepare("
-            SELECT * FROM tblposts ORDER BY PostLikes DESC;
-            ");
-            $stmt->execute();
-
-            // loop through records and echo post title, content, likes, dislikes, comments, and date
-            // add \\(\\) around latex so it gets rendered by mathjax
-            // everything is put inside a form element so postid can be posted to savepostid.php when user clicks anywhere on the post
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                // count how many comments on each post
-                $stmt2 = $conn->prepare("
-                SELECT COUNT(*) FROM tblcomments WHERE PostID = :PostID;
+            // check if madesearchquery is not 1
+            if ($_SESSION["madesearchquery"] != 1) {
+                // fetch all posts and sort by most likes
+                $stmt = $conn->prepare("
+                SELECT * FROM tblposts ORDER BY PostLikes DESC;
                 ");
+                $stmt->execute();
 
-                // bind postid and execute
-                $stmt2->bindParam(":PostID", $row["PostID"]);
-                $stmt2->execute();
+                // loop through records and echo post title, content, likes, dislikes, comments, and date
+                // add \\(\\) around latex so it gets rendered by mathjax
+                // everything is put inside a form element so postid can be posted to savepostid.php when user clicks anywhere on the post
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    // count how many comments on each post
+                    $stmt2 = $conn->prepare("
+                    SELECT COUNT(*) FROM tblcomments WHERE PostID = :PostID;
+                    ");
 
-                // get comment count
-                $row1 = $stmt2->fetch(PDO::FETCH_ASSOC);
+                    // bind postid and execute
+                    $stmt2->bindParam(":PostID", $row["PostID"]);
+                    $stmt2->execute();
 
-                // echo all post info
-                echo("<form action='savepostid.php' method='post' onclick='this.submit()' style='cursor: pointer;'>");
-                echo("<input type='hidden' name='PostID' value='" . $row["PostID"] . "'>");
-                echo("<h2>\\(" . $row["PostTitle"] . "\\)</h2>");
-                echo("<p>\\(" . $row["PostContent"] . "\\)</p>");
-                echo("<p><b>Likes:</b> " . $row["PostLikes"] . "</p>");
-                echo("<p><b>Dislikes:</b> " . $row["PostDislikes"] . "</p>");
-                echo("<p><b>Comments:</b> " . $row1["COUNT(*)"] . "</p>");
-                echo("<p><b>Date:</b> " . $row["PostTime"] . "</p>");
-                echo("<br>");
-                echo("</form>");
+                    // get comment count
+                    $row1 = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+                    // echo all post info
+                    echo("<form action='savepostid.php' method='post' onclick='this.submit()' style='cursor: pointer;'>");
+                    echo("<input type='hidden' name='PostID' value='" . $row["PostID"] . "'>");
+                    echo("<h2>\\(" . $row["PostTitle"] . "\\)</h2>");
+                    echo("<p>\\(" . $row["PostContent"] . "\\)</p>");
+                    echo("<p><b>Likes:</b> " . $row["PostLikes"] . "</p>");
+                    echo("<p><b>Dislikes:</b> " . $row["PostDislikes"] . "</p>");
+                    echo("<p><b>Comments:</b> " . $row1["COUNT(*)"] . "</p>");
+                    echo("<p><b>Date:</b> " . $row["PostTime"] . "</p>");
+                    echo("<br>");
+                    echo("</form>");
+                }
+            }
+            else {
+                // run sql statement and display all returned posts
+                $stmt = $conn->prepare($_SESSION["searchstatement"]);
+                $stmt->execute();
+
+                // loop through records and echo post title, content, likes, dislikes, comments, and date
+                // add \\(\\) around latex so it gets rendered by mathjax
+                // everything is put inside a form element so postid can be posted to savepostid.php when user clicks anywhere on the post
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    // count how many comments on each post
+                    $stmt2 = $conn->prepare("
+                    SELECT COUNT(*) FROM tblcomments WHERE PostID = :PostID;
+                    ");
+
+                    // bind postid and execute
+                    $stmt2->bindParam(":PostID", $row["PostID"]);
+                    $stmt2->execute();
+
+                    // get comment count
+                    $row1 = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+                    // echo all post info
+                    echo("<form action='savepostid.php' method='post' onclick='this.submit()' style='cursor: pointer;'>");
+                    echo("<input type='hidden' name='PostID' value='" . $row["PostID"] . "'>");
+                    echo("<h2>\\(" . $row["PostTitle"] . "\\)</h2>");
+                    echo("<p>\\(" . $row["PostContent"] . "\\)</p>");
+                    echo("<p><b>Likes:</b> " . $row["PostLikes"] . "</p>");
+                    echo("<p><b>Dislikes:</b> " . $row["PostDislikes"] . "</p>");
+                    echo("<p><b>Comments:</b> " . $row1["COUNT(*)"] . "</p>");
+                    echo("<p><b>Date:</b> " . $row["PostTime"] . "</p>");
+                    echo("<br>");
+                    echo("</form>");
+                }
+
+                // set madesearchquery back to 0
+                $_SESSION["madesearchquery"] = 0;
             }
         ?>
     </body>
