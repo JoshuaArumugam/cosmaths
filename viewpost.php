@@ -2,11 +2,23 @@
     // starts session and connect to db
     session_start();
     include_once("connection.php");
+    
+    // check if loginstatus is set, or if it is false
+    if (isset($_SESSION["loginstatus"])) {
+        if (!$_SESSION["loginstatus"]) {
+            header("Location: login.php");
+        }
+    }
+    else {
+        header("Location: login.php");
+    }
+
     $stmt = $conn->prepare("
     SELECT * FROM tblposts WHERE PostID=:PostID;
     ");
     $stmt->bindParam(":PostID", $_SESSION["savedpostid"]);
     $stmt->execute();
+
 ?>
 <!DOCTYPE html>
 <html>

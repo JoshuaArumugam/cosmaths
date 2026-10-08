@@ -1,5 +1,15 @@
 <?php
+    // start session
     session_start();
+    // check if loginstatus is set, or if it is false
+     if (isset($_SESSION["loginstatus"])) {
+        if (!$_SESSION["loginstatus"]) {
+            header("Location: login.php");
+        }
+     }
+     else {
+        header("Location: login.php");
+     }
 ?>
 <!DOCTYPE html>
 <html>
