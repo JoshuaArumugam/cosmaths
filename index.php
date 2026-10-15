@@ -123,9 +123,9 @@
                                 echo("<h2 style='margin-top: 0;'>\\(" . $row["PostTitle"] . "\\)</h2>");
                                 echo("<p>\\(" . $row["PostContent"] . "\\)</p>");
                                 echo("<div>");
-                                echo("<p style='display: inline-block; margin-right: 10px;'><b>Likes:</b> " . $row["PostLikes"] . "</p>");
-                                echo("<p style='display: inline-block; margin-right: 10px;'><b>Dislikes:</b> " . $row["PostDislikes"] . "</p>");
-                                echo("<p style='display: inline-block; margin-right: 10px;'><b>Comments:</b> " . $row1["COUNT(*)"] . "</p>");
+                                echo("<p style='display: inline-block; margin-right: 10px;'><span class='glyphicon glyphicon-thumbs-up' style='font-size: 16px;'></span> " . $row["PostLikes"] . "</p>");
+                                echo("<p style='display: inline-block; margin-right: 10px;'><span class='glyphicon glyphicon-thumbs-down' style='font-size: 16px;'></span> " . $row["PostDislikes"] . "</p>");
+                                echo("<p style='display: inline-block; margin-right: 10px;'><span class='glyphicon glyphicon-comment' style='font-size: 16px;'></span> " . $row1["COUNT(*)"] . "</p>");
                                 echo("<p style='display: inline-block; margin-right: 10px;'><b>Date:</b> " . $row["PostTime"] . "</p>");
                                 echo("</div>");
                                 echo("</form>");
