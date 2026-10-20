@@ -23,7 +23,18 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     </head>
     <body style="margin: 0; width: 100%; height: 100%;">
-        <div style="display: flex; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; background-color: #dbdbdb;">
+        <nav class="navbar" style="margin: 0; border-bottom: 2px solid #6ac8d9">
+            <div class="container-fluid bg-info">
+                <div class="navbar-header">
+                    <a class="navbar-brand"><h3 style="margin: 0;">CosMaths</h3></a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a href="login.php">Log-in</a></li>
+                    <li><a href="signup.php">Sign-up</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div style="display: flex; width: 100%; height: calc(100% - 53px); flex-direction: column; justify-content: center; align-items: center; background-color: #dbdbdb;">
             <div class="panel panel-primary" style="margin: 0; width: 30%;">
                 <div class="panel-heading" style=" display: flex; align-items: center; justify-content: center;">
                     <h1 style="margin: 0;">Log-in</h1>
