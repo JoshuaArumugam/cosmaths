@@ -12,10 +12,13 @@
      }
 ?>
 <!DOCTYPE html>
-<html>
+<html style="height: fit-content; min-height: 100%;">
     <head>
         <title>Create Post</title>
         <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <script>
             // runs everytime clicked
             function showQuestionInputs() {
@@ -65,106 +68,131 @@
             }
         </script>
     </head>
-    <body>
-        <h1>Create post</h1>
-        <form method="post" action="processpost.php">
-            <!-- title input box + preview for it -->
-            <label for="title"><b>Title:</b></label><br>
-            <!-- when user types, runs function to display text in preview box -->
-            <input type="text" id="title" name="title" oninput="renderTitle()"><br>
-            <p>Preview:</p>
-            <p id="titlepreview"></p>
-            <!-- post content input box + preview for it -->
-            <label for="content"><b>Content:</b></label><br>
-            <input type="text" id="content" name="content" oninput="renderContent()"><br>
-            <p>Preview:</p>
-            <p id="contentpreview"></p>
-            <label for="posttopics"><b>Select topics for post:</b></label><br>
-            <select name="posttopics[]" id="posttopics" multiple="multiple">
-                <?php
-                    // connect to db and fetch all topics from table
-                    include_once('connection.php');
+    <body style="height: 100%;">
+        <nav class="navbar" style="margin: 0; border-bottom: 2px solid #6ac8d9">
+            <div class="container-fluid bg-info">
+                <div class="navbar-header">
+                    <a class="navbar-brand"><h3 style="margin: 0;">CosMaths</h3></a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a href="index.php">Homepage</a></li>
+                    <li><a href="accountpage.php">Account</a></li>
+                    <li><a href="createpost.php">Create Post</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="logout.php">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid" style="margin: 0; padding: 0; height: fit-content; min-height: 100%; width: 100%;">
+            <div class="row" style="display: flex; align-items: stretch; margin: 0;">
+                <div class="col-sm-8" style="min-height: calc(100vh - 52.5px); padding: 0; border-right: 2px solid #dbdbdb;">
+                    <div class="row" style="margin: 0; border-bottom: 2px solid #b4b4b4; padding: 12px; display: flex; justify-content: center; align-items: center; background-color: #f5f5f5;">
+                        <h2 style="margin: 0;">Create Post</h2>
+                    </div>
+                    <form method="post" action="processpost.php">
+                        <!-- title input box + preview for it -->
+                        <label for="title"><b>Title:</b></label><br>
+                        <!-- when user types, runs function to display text in preview box -->
+                        <input type="text" id="title" name="title" oninput="renderTitle()"><br>
+                        <p>Preview:</p>
+                        <p id="titlepreview"></p>
+                        <!-- post content input box + preview for it -->
+                        <label for="content"><b>Content:</b></label><br>
+                        <input type="text" id="content" name="content" oninput="renderContent()"><br>
+                        <p>Preview:</p>
+                        <p id="contentpreview"></p>
+                        <label for="posttopics"><b>Select topics for post:</b></label><br>
+                        <select name="posttopics[]" id="posttopics" multiple="multiple">
+                            <?php
+                                // connect to db and fetch all topics from table
+                                include_once('connection.php');
 
-                    $stmt = $conn->prepare("
-                    SELECT * FROM tbltopiclabels;
-                    ");
-                    $stmt->execute();
+                                $stmt = $conn->prepare("
+                                SELECT * FROM tbltopiclabels;
+                                ");
+                                $stmt->execute();
 
-                    // loop through returned records and add all options to the dropdown list
+                                // loop through returned records and add all options to the dropdown list
 
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        // create select option
-                        echo("<option value='" . $row["TopicID"] . "'>" . $row["TopicName"] . "</option>");
-                    }
-                ?>
-            </select><br><br>
-            <label for="isquestion"><b>Is the post a question? </b></label>
-            <!-- when checkbox clicked, runs function to hide/show relevant elements -->
-            <input type="checkbox" id="isquestion" onclick="showQuestionInputs()" name="isquestion" value="1"><br><br>
-            <!-- question answer, hint input boxes and preview for the hint -->
-            <label hidden class="question" for="questionanswer"><b>Question answer:</b></label><br hidden class="question">
-            <input hidden class="question" type="text" id="questionanswer" name="questionanswer"><br hidden class="question">
-            <label hidden class="question" for="questionhint"><b>Question hint:</b></label><br hidden class="question">
-            <input hidden class="question" type="text" id="questionhint" name="questionhint" oninput="renderHint()"><br hidden class="question">
-            <p hidden class="question">Preview:</p>
-            <p hidden id="questionhintpreview" class="question"></p><br hidden class="question">
-            <input type="submit" value="Post">
-        </form>
-        <?php
-            // check create post status to check whether there was a previous attempt
-            if (isset($_SESSION["createpoststatus"])) {
-                if ($_SESSION["createpoststatus"]) {
-                    // success message
-                    echo("<p>Post created successfully</p>");
-                }
-                else {
-                    // display error message
-                    echo("<p>Post creation error: " . $_SESSION["createposterrormsg"] . "</p>");
-                }
-            }
-        ?>
-        <!-- on-screen keyboard for latex -->
-        <div id="keyboard" style="width: 35%;">
-            <h3>Keyboard</h3>
-            <div id="buttonsgrid" style="display: grid; grid-template-columns: repeat(6, 1fr);">
-                <button onclick="addToTextBox('\\frac{}{}')">\(\frac{a}{b}\)</button>
-                <button onclick="addToTextBox('\\sqrt{}')">\(\sqrt{x}\)</button>
-                <button onclick="addToTextBox('\\sum_{}^{}')">\(\sum_{i=1}^{n}\)</button>
-                <button onclick="addToTextBox('\\int_{}^{}dx')">\(\int_{a}^{b}dx\)</button>
-                <button onclick="addToTextBox('\\lim_{x \\to }')">\(\lim_{x \to c}\)</button>
-                <button onclick="addToTextBox('\\infty')">\(\infty\)</button>
-                <button onclick="addToTextBox('\\pi')">\(\pi\)</button>
-                <button onclick="addToTextBox('\\sin(\\theta)')">\(\sin(\theta)\)</button>
-                <button onclick="addToTextBox('\\cos(\\theta)')">\(\cos(\theta)\)</button>
-                <button onclick="addToTextBox('\\tan(\\theta)')">\(\tan(\theta)\)</button>
-                <button onclick="addToTextBox('{}^{}')">\(a^{b}\)</button>
-                <button onclick="addToTextBox('\\sqrt[n]{x}')">\(\sqrt[n]{x}\)</button>
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    // create select option
+                                    echo("<option value='" . $row["TopicID"] . "'>" . $row["TopicName"] . "</option>");
+                                }
+                            ?>
+                        </select><br><br>
+                        <label for="isquestion"><b>Is the post a question? </b></label>
+                        <!-- when checkbox clicked, runs function to hide/show relevant elements -->
+                        <input type="checkbox" id="isquestion" onclick="showQuestionInputs()" name="isquestion" value="1"><br><br>
+                        <!-- question answer, hint input boxes and preview for the hint -->
+                        <label hidden class="question" for="questionanswer"><b>Question answer:</b></label><br hidden class="question">
+                        <input hidden class="question" type="text" id="questionanswer" name="questionanswer"><br hidden class="question">
+                        <label hidden class="question" for="questionhint"><b>Question hint:</b></label><br hidden class="question">
+                        <input hidden class="question" type="text" id="questionhint" name="questionhint" oninput="renderHint()"><br hidden class="question">
+                        <p hidden class="question">Preview:</p>
+                        <p hidden id="questionhintpreview" class="question"></p><br hidden class="question">
+                        <input type="submit" value="Post">
+                    </form>
+                    <?php
+                        // check create post status to check whether there was a previous attempt
+                        if (isset($_SESSION["createpoststatus"])) {
+                            if ($_SESSION["createpoststatus"]) {
+                                // success message
+                                echo("<p>Post created successfully</p>");
+                            }
+                            else {
+                                // display error message
+                                echo("<p>Post creation error: " . $_SESSION["createposterrormsg"] . "</p>");
+                            }
+                        }
+                    ?>
+                </div>
+                <div class="col-sm-4" style="padding: 0;">
+                    <!-- on-screen keyboard for latex -->
+                    <div class="row" style="margin: 0; border-bottom: 2px solid #b4b4b4; padding: 12px; display: flex; justify-content: center; align-items: center; background-color: #f5f5f5;">
+                        <h2 style="margin: 0;">Keyboard</h2>
+                    </div>
+                    <div id="buttonsgrid" style="display: grid; grid-template-columns: repeat(6, 1fr);">
+                        <button onclick="addToTextBox('\\frac{}{}')">\(\frac{a}{b}\)</button>
+                        <button onclick="addToTextBox('\\sqrt{}')">\(\sqrt{x}\)</button>
+                        <button onclick="addToTextBox('\\sum_{}^{}')">\(\sum_{i=1}^{n}\)</button>
+                        <button onclick="addToTextBox('\\int_{}^{}dx')">\(\int_{a}^{b}dx\)</button>
+                        <button onclick="addToTextBox('\\lim_{x \\to }')">\(\lim_{x \to c}\)</button>
+                        <button onclick="addToTextBox('\\infty')">\(\infty\)</button>
+                        <button onclick="addToTextBox('\\pi')">\(\pi\)</button>
+                        <button onclick="addToTextBox('\\sin(\\theta)')">\(\sin(\theta)\)</button>
+                        <button onclick="addToTextBox('\\cos(\\theta)')">\(\cos(\theta)\)</button>
+                        <button onclick="addToTextBox('\\tan(\\theta)')">\(\tan(\theta)\)</button>
+                        <button onclick="addToTextBox('{}^{}')">\(a^{b}\)</button>
+                        <button onclick="addToTextBox('\\sqrt[n]{x}')">\(\sqrt[n]{x}\)</button>
+                    </div>
+                    <script>
+                        // when text box clicked, save the text box in lastusedtextbox variable
+                        let lastusedtextbox = null;
+
+                        // select all text boxes
+                        let textboxes = document.querySelectorAll("input[type='text'], textarea");
+                        // save when clicked
+                        textboxes.forEach(function(textbox) {
+                            textbox.addEventListener("focus", function() {
+                                lastusedtextbox = this;
+                            });
+                        });
+                        
+                        // function to add latex to lastusedtextbox when button clicked
+                        function addToTextBox(latex) {
+                            // check if lastusedtextbox null
+                            if (lastusedtextbox != null) {
+                                lastusedtextbox.value = lastusedtextbox.value + latex;
+                            }
+                            // render all text boxes
+                            renderTitle()
+                            renderContent()
+                            renderHint()
+                        }
+                    </script>
+                </div>
             </div>
         </div>
-        <script>
-            // when text box clicked, save the text box in lastusedtextbox variable
-            let lastusedtextbox = null;
-
-            // select all text boxes
-            let textboxes = document.querySelectorAll("input[type='text'], textarea");
-            // save when clicked
-            textboxes.forEach(function(textbox) {
-                textbox.addEventListener("focus", function() {
-                    lastusedtextbox = this;
-                });
-            });
-            
-            // function to add latex to lastusedtextbox when button clicked
-            function addToTextBox(latex) {
-                // check if lastusedtextbox null
-                if (lastusedtextbox != null) {
-                    lastusedtextbox.value = lastusedtextbox.value + latex;
-                }
-                // render all text boxes
-                renderTitle()
-                renderContent()
-                renderHint()
-            }
-        </script>
     </body>
 </html>
