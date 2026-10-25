@@ -83,7 +83,7 @@
                                     <label><input type="checkbox" name="helprequestlesson" value="1" id="helprequestlesson">Help Request/Lesson</label>
                                 </div>
                                 <div class="checkbox">
-                                    <label><input type="checkbox" name="helprequestlesson" value="1" id="helprequestlesson">Question</label>
+                                    <label><input type="checkbox" name="question" value="1" id="question">Question</label>
                                 </div>
                                 <input type="submit" value="Submit" class="btn btn-default">
                             </form>
@@ -162,16 +162,19 @@
                                 $row1 = $stmt2->fetch(PDO::FETCH_ASSOC);
 
                                 // echo all post info
+                                echo("<div style='padding: 25px; border-bottom: 2px solid #dbdbdb'>");
                                 echo("<form action='savepostid.php' method='post' onclick='this.submit()' style='cursor: pointer;'>");
                                 echo("<input type='hidden' name='PostID' value='" . $row["PostID"] . "'>");
-                                echo("<h2>\\(" . $row["PostTitle"] . "\\)</h2>");
+                                echo("<h2 style='margin-top: 0;'>\\(" . $row["PostTitle"] . "\\)</h2>");
                                 echo("<p>\\(" . $row["PostContent"] . "\\)</p>");
-                                echo("<p><b>Likes:</b> " . $row["PostLikes"] . "</p>");
-                                echo("<p><b>Dislikes:</b> " . $row["PostDislikes"] . "</p>");
-                                echo("<p><b>Comments:</b> " . $row1["COUNT(*)"] . "</p>");
-                                echo("<p><b>Date:</b> " . $row["PostTime"] . "</p>");
-                                echo("<br>");
+                                echo("<div>");
+                                echo("<p style='display: inline-block; margin-right: 10px;'><span class='glyphicon glyphicon-thumbs-up' style='font-size: 16px;'></span> " . $row["PostLikes"] . "</p>");
+                                echo("<p style='display: inline-block; margin-right: 10px;'><span class='glyphicon glyphicon-thumbs-down' style='font-size: 16px;'></span> " . $row["PostDislikes"] . "</p>");
+                                echo("<p style='display: inline-block; margin-right: 10px;'><span class='glyphicon glyphicon-comment' style='font-size: 16px;'></span> " . $row1["COUNT(*)"] . "</p>");
+                                echo("<p style='display: inline-block; margin-right: 10px;'><b>Date:</b> " . $row["PostTime"] . "</p>");
+                                echo("</div>");
                                 echo("</form>");
+                                echo("</div>");
                             }
 
                             // set madesearch and searchquery back to 0 and "" respectively
@@ -200,16 +203,19 @@
                                 $row1 = $stmt2->fetch(PDO::FETCH_ASSOC);
 
                                 // echo all post info
+                                echo("<div style='padding: 25px; border-bottom: 2px solid #dbdbdb'>");
                                 echo("<form action='savepostid.php' method='post' onclick='this.submit()' style='cursor: pointer;'>");
                                 echo("<input type='hidden' name='PostID' value='" . $row["PostID"] . "'>");
-                                echo("<h2>\\(" . $row["PostTitle"] . "\\)</h2>");
+                                echo("<h2 style='margin-top: 0;'>\\(" . $row["PostTitle"] . "\\)</h2>");
                                 echo("<p>\\(" . $row["PostContent"] . "\\)</p>");
-                                echo("<p><b>Likes:</b> " . $row["PostLikes"] . "</p>");
-                                echo("<p><b>Dislikes:</b> " . $row["PostDislikes"] . "</p>");
-                                echo("<p><b>Comments:</b> " . $row1["COUNT(*)"] . "</p>");
-                                echo("<p><b>Date:</b> " . $row["PostTime"] . "</p>");
-                                echo("<br>");
+                                echo("<div>");
+                                echo("<p style='display: inline-block; margin-right: 10px;'><span class='glyphicon glyphicon-thumbs-up' style='font-size: 16px;'></span> " . $row["PostLikes"] . "</p>");
+                                echo("<p style='display: inline-block; margin-right: 10px;'><span class='glyphicon glyphicon-thumbs-down' style='font-size: 16px;'></span> " . $row["PostDislikes"] . "</p>");
+                                echo("<p style='display: inline-block; margin-right: 10px;'><span class='glyphicon glyphicon-comment' style='font-size: 16px;'></span> " . $row1["COUNT(*)"] . "</p>");
+                                echo("<p style='display: inline-block; margin-right: 10px;'><b>Date:</b> " . $row["PostTime"] . "</p>");
+                                echo("</div>");
                                 echo("</form>");
+                                echo("</div>");
                             }
 
                             // set madesearchquery back to 0
